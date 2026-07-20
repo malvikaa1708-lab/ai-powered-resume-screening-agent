@@ -1,1 +1,101 @@
-Project_Report.pdf
+         AI-Powered Resume Selection System
+
+	Overview
+The AI-Powered Resume Selection System is an automated recruitment workflow designed using n8n to streamline and optimize the candidate screening process. The system integrates webhook-based data collection, document processing, and AI-driven evaluation to reduce manual effort in hiring.
+It begins by receiving candidate details and resume links through a webhook trigger. The system then retrieves the actual resume file, extracts its textual content, and analyzes it using an AI model to assess the candidate’s suitability for a given job role.
+Based on predefined criteria and AI-generated insights such as match score and reasoning, the workflow makes an intelligent decision (selection or rejection). The results are stored in a structured format within a database (Google Sheets), and automated email notifications are sent to candidates accordingly.
+This solution ensures efficient, scalable, and consistent hiring decisions, making it highly suitable for organizations handling large volumes of applications.
+
+	WORKFLOW ARCHITECTURE
+The AI-Powered Resume Selection System is an automated workflow developed using n8n to streamline the recruitment process. The system is designed to minimize manual screening efforts by integrating data collection, resume processing, artificial intelligence-based evaluation, and automated communication into a single pipeline.
+The workflow begins when candidate information is received from an external source and proceeds through multiple stages including file retrieval, text extraction, AI-based analysis, decision-making, and notification. Each step is handled by a dedicated node within the n8n environment, ensuring modularity, scalability, and efficiency.
+    N8n workflow of ai powered resume selection
+2.1 Webhook Trigger (POST)
+The workflow begins with a Webhook Trigger node, which is configured to accept a POST request. This webhook acts as the entry point of the system and receives data from an external application such as a form or database.
+In this workflow, the external application used is Tally forms.
+                                                       
+Link: Candidate screening form(Tally)
+The incoming request contains essential candidate details including the candidate’s name, email, and resume in the form of a PDF URL. This data is passed forward to the workflow for further processing.
+Additionally, the external system (for example, Tally or any web application) sends data to the webhook URL whenever a submission is made. This ensures that the workflow starts automatically without manual intervention.
+
+2.2 Sending Data to Server (External Integration Logic)
+Once the webhook is triggered, the external system performs the following steps:
+•	It converts the resume into a publicly accessible URL 
+•	When the user submits the form, the system sends data to the webhook 
+•	The webhook receives this data and triggers the workflow execution 
+This step ensures seamless communication between the external application and the n8n workflow.
+
+
+2.3 HTTP Request Node (GET – Fetch Resume from URL)
+After receiving the resume URL, an HTTP Request node is used to fetch the actual resume file.
+This node performs a GET request by following the URL provided in the webhook data. Since the URL points to a PDF file, the node downloads the resume as a binary file.
+This step is important because the AI system cannot process a URL directly. It requires the actual file content. Therefore, the HTTP node ensures that the workflow retrieves the real PDF file instead of just referencing its location.
+
+2.4 File Handling (Binary Data Processing)
+The HTTP Request node returns the resume in binary format. At this stage, the system ensures that the file is correctly fetched and ready for further processing.
+Since the AI cannot read binary data, the file must be converted into a readable format in the next step.
+
+2.5 Extract from PDF Node (PDF → Text Conversion)
+The binary PDF file is passed to a PDF extraction node, which converts the document into plain text.
+This step is necessary because AI models require textual input to perform analysis. The extracted text includes all relevant information from the resume, such as name, email, skills, education, and experience.
+Without this step, the AI would not be able to interpret the content of the resume.
+
+2.6 AI Agent Node (Resume Analysis and Comparison)
+The extracted text is then sent to an AI Agent node, where the actual evaluation takes place.
+In this node, the resume content is compared with a predefined job description. The AI processes the information and generates:
+•	A match score, indicating how well the candidate fits the role 
+•	A decision, specifying whether the candidate should be selected or rejected 
+•	A reason, explaining the logic behind the decision 
+This node acts as the core intelligence of the workflow, replacing manual resume screening with automated decision-making.
+
+2.7 Structured Output Parser (Clean JSON Output)
+The response generated by the AI is not always in a structured format. Therefore, a Structured Output Parser node is used to convert the output into clean and organized JSON.
+This step ensures that the data can be easily used in further nodes, such as storage and conditional logic. It also removes inconsistencies and formats the output properly.
+
+2.8 Google Sheets Node (Data Storage)
+After structuring the data, the workflow stores the results in Google Sheets.
+This node saves all important details including candidate information, match score, decision, and reasoning. Google Sheets acts as a simple database for tracking and reviewing candidate evaluations.
+This step is useful for maintaining records and analyzing recruitment outcomes.
+ Link:Google sheets stoing the data with result
+
+2.9 IF Node (Decision Based on Match Score)
+The IF node is used to apply decision logic based on the match score generated by the AI.
+A condition is defined where the match score is compared against a threshold value (for example, greater than 70). Based on this condition:
+•	If the score meets the requirement, the candidate is marked as selected 
+•	If the score is below the threshold, the candidate is marked as rejected 
+This node enables automated branching of the workflow.
+
+2.10 Email Node (Automated Notification)
+The final step involves sending an automated email to the candidate.
+Depending on the decision:
+•	If selected, the candidate receives a confirmation or congratulatory email 
+•	If rejected, the candidate receives a rejection email
+ Rejection mail
+ Selection mail
+
+
+	TECHNOLOGIES USED
+•	n8n – Workflow automation 
+•	AI Model (ChatGPT mini 4o) – Resume evaluation 
+•	Webhook API – Data input 
+•	HTTP Request Node – File fetching 
+•	PDF Parser – Text extraction 
+•	Google Sheets API – Data storage 
+•	Email Node – Notifications
+                                   
+                       
+                                                          Workflow flowchart
+
+
+	LIMIATIONS OF THE SYSTEM
+
+•	The system depends on resume quality; poorly formatted resumes may lead to incorrect extraction. 
+•	AI may not fully understand context, soft skills, or practical experience. 
+•	Fixed match score threshold may not suit all job roles. 
+•	Complex resume formats (tables, images) may not be parsed correctly. 
+•	Depends on external services (AI, Google Sheets, webhook), which may affect reliability. 
+•	No human validation, so decisions may not always be accurate.
+
+
+
+
