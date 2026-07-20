@@ -11,6 +11,21 @@
 An AI-powered recruitment automation system built with **n8n** that automatically screens resumes, evaluates candidates against a job description using an LLM, stores results in Google Sheets, and sends personalized email notifications.
 
 ---
+## 🚀 Project Overview
+
+This project automates the resume screening process using n8n and OpenAI.
+
+The workflow:
+
+- Receives candidate applications through Tally Forms
+- Downloads resumes automatically
+- Extracts text from PDF resumes
+- Compares resumes against a job description using an LLM
+- Generates a match score and hiring decision
+- Stores results in Google Sheets
+- Sends automated selection or rejection emails
+
+---
 
 # 🚀 Features
 
