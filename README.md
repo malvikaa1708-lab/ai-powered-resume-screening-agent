@@ -104,12 +104,12 @@ Email      Email
 # 📂 Project Structure
 
 ```text
-workflow/
-images/
-docs/
-sample-data/
-prompts/
+
+
 README.md
+ai_resume_screening_report
+ai_powered_resume_screening_agent.json
+workflow.png
 ```
 
 ---
